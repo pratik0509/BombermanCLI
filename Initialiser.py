@@ -1,4 +1,7 @@
 from Board import Board
+from constants import *
+from Brick import Brick
+import os
 
 def placeWalls(BombermanBoard):
 	for i in range(0, BombermanBoard.height):
@@ -20,8 +23,17 @@ def placeWalls(BombermanBoard):
 				BombermanBoard.arena[i][j] = '#'
 	pass
 
+def placeBricks(BombermanBoard):
+	for i in range(0, MAX_BRICKS):
+		block = Brick(BombermanBoard.height ,BombermanBoard.width)
+		while not BombermanBoard.placeObject(block.x_pos, block.y_pos, '%') :
+			block = Brick(BombermanBoard.height ,BombermanBoard.width)
+
 def loadBoard():
+	os.system('clear')
 	BombermanBoard = Board()
 	placeWalls(BombermanBoard)
+	placeBricks(BombermanBoard)
 	print(BombermanBoard.scaledBoard())
+
 loadBoard()

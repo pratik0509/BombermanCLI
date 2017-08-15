@@ -27,5 +27,12 @@ class Board:
 					for x in range(0, X_SCALE):
 						objString += self.arena[i][j]
 				objString += '\n'
-				
+
 		return objString
+
+	def placeObject(self, x_pos, y_pos, piece):
+		if self.arena[x_pos][y_pos] != ' ':
+			return False
+		else:
+			self.arena[x_pos][y_pos] = piece
+			return True
