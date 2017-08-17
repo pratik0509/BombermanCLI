@@ -1,7 +1,5 @@
-import time
-from random import seed, randint
-
-seed(time.time())
+from random import randint
+from constants import *
 
 class Person:
 	'''
@@ -15,12 +13,33 @@ class Person:
 	'''
 	TODO: Return in which direction move is valid
 	'''
-	
-	def moveValidity(self, Obstacles):
+
+	def moveValidity(self, Arena):
 		validMove = [True, True, True, True]
 		mvpos = 0
-		for itr in Obstacles:
-			validMove[mvpos % 4] &= (itr.x_pos != self.x_pos and itr.y_pos != self.y_pos)
-			mvpos += 1
-
+		x = self.x_pos
+		y = self.y_pos
+		validMove[0] &= not (Arena[x][y + 1] == BR or Arena[x][y + 1] == WL)
+		validMove[1] &= not (Arena[x + 1][y] == BR or Arena[x + 1][y] == WL)
+		validMove[2] &= not (Arena[x][y - 1] == BR or Arena[x][y - 1] == WL)
+		validMove[3] &= not (Arena[x - 1][y] == BR or Arena[x - 1][y] == WL)
 		return validMove
+
+	def move(self, keyPress, BombermanBoard, code):
+		availMoves = self.moveValidity(BombermanBoard.arena)
+		if not availMoves[MV[keyPress]]:
+			return
+		x = self.x_pos
+		y = self.y_pos
+		BombermanBoard.arena[x][y] = ' '
+		if MV[keyPress] == 0:
+			y += 1
+		elif MV[keyPress] == 1:
+			x += 1
+		elif MV[keyPress] == 2:
+			y -= 1
+		elif MV[keyPress] == 3:
+			x -= 1
+		BombermanBoard.arena[x][y] = code
+		self.x_pos = x
+		self.y_pos = y

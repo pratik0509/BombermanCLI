@@ -1,7 +1,4 @@
-import time
-from random import seed, randint
-
-seed(time.time())
+from random import randint
 
 class Brick:
 	'''

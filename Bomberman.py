@@ -7,5 +7,3 @@ class Bomberman(Person):
 
 	def __init__(self, board_height, board_width):
 		super().__init__(board_height, board_width)
-
-	
