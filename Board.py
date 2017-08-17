@@ -25,7 +25,13 @@ class Board:
 			for y in range(0, Y_SCALE):
 				for j in range(0, self.width):
 					for x in range(0, X_SCALE):
-						objString += self.arena[i][j]
+						if self.arena[i][j] == BM:
+							pass
+							objString += BMAN[y][x]
+						elif self.arena[i][j] == EM:
+							objString += ENEM[y][x]
+						else:
+							objString += self.arena[i][j]
 				objString += '\n'
 
 		return objString
