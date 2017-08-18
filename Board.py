@@ -19,14 +19,13 @@ class Board:
 			objString += '\n'
 		return objString
 
-	def scaledBoard(self):
+	def scaledBoard(self, SCORE, WATCH):
 		objString = ''
 		for i in range(0, self.height):
 			for y in range(0, Y_SCALE):
 				for j in range(0, self.width):
 					for x in range(0, X_SCALE):
 						if self.arena[i][j] == BM:
-							pass
 							objString += BMAN[y][x]
 						elif self.arena[i][j] == EM:
 							objString += ENEM[y][x]
@@ -34,6 +33,9 @@ class Board:
 							objString += self.arena[i][j]
 				objString += '\n'
 
+		objString += '\n\n'
+		objString += 'SCORE: ' + str(SCORE) + '\t'
+		objString += 'TIME: ' + str(WATCH) + '\n'
 		return objString
 
 	def placeObject(self, x_pos, y_pos, piece):

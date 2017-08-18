@@ -13,23 +13,31 @@ class Person:
 	def moveValidity(self, Arena):
 		validMove = [True, True, True, True]
 		mvpos = 0
+
 		x = self.x_pos
 		y = self.y_pos
+
 		validMove[0] &= not (Arena[x][y + 1] == BR or Arena[x][y + 1] == WL)
 		validMove[1] &= not (Arena[x + 1][y] == BR or Arena[x + 1][y] == WL)
 		validMove[2] &= not (Arena[x][y - 1] == BR or Arena[x][y - 1] == WL)
 		validMove[3] &= not (Arena[x - 1][y] == BR or Arena[x - 1][y] == WL)
+
 		return validMove
 
 	def move(self, keyPress, BombermanBoard, code):
 		x = self.x_pos
 		y = self.y_pos
+
 		if BombermanBoard.arena[x][y] != code:
 			return False
+
 		availMoves = self.moveValidity(BombermanBoard.arena)
+
 		if not availMoves[MV[keyPress]]:
 			return True
+
 		BombermanBoard.arena[x][y] = ' '
+
 		if MV[keyPress] == 0:
 			y += 1
 		elif MV[keyPress] == 1:
@@ -38,9 +46,11 @@ class Person:
 			y -= 1
 		elif MV[keyPress] == 3:
 			x -= 1
+
 		if code == BM:
 			if BombermanBoard.arena[x][y] == EM or BombermanBoard.arena[x][y] == EXPSIGN:
 				return False
+
 		BombermanBoard.arena[x][y] = code
 		self.x_pos = x
 		self.y_pos = y

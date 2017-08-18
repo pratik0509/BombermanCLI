@@ -66,3 +66,8 @@ for i in range(0, len(BMAN)):
 
 QUIT = 'q'
 PAUSE = 'p'
+BREAK_BRICK = 50
+BREAK_ENEMY = 150
+LEVEL_BONUS = 30
+TIME_BONUS = 0.4
+MAX_BOMB_ALLOWED = 2

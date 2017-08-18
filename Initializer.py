@@ -1,6 +1,6 @@
+from constants import *
 from random import randint
 from Board import Board
-from constants import *
 from Brick import Brick
 import os
 import time
@@ -14,8 +14,6 @@ Inp = NonBlockInput()
 EnemyList = []
 BombList = []
 ExplosionList = []
-# Player = ''
-# BombermanBoard = ''
 level = LEVEL1
 
 if level < LEVEL4:
@@ -28,6 +26,7 @@ def getTimeMillis():
 def placeWalls(BombermanBoard):
 	for i in range(0, BombermanBoard.height):
 		BombermanBoard.arena.append([])
+
 		for j in range(0, BombermanBoard.width):
 			BombermanBoard.arena[i].append(' ')
 
@@ -40,6 +39,7 @@ def placeWalls(BombermanBoard):
 			BombermanBoard.arena[0][i] = WL
 
 	for i in range(2, BombermanBoard.height):
+
 		for j in range(2, BombermanBoard.width):
 			if i % 2 == 0 and j % 2 == 0:
 				BombermanBoard.arena[i][j] = WL
@@ -52,8 +52,10 @@ def placeBricks(BombermanBoard):
 
 def placeBomberMan(BombermanBoard):
 	man = Bomberman(BombermanBoard.height, BombermanBoard.width)
+
 	while not BombermanBoard.placeObject(man.x_pos, man.y_pos, BM):
 		man = Bomberman(BombermanBoard.height, BombermanBoard.width)
+
 	return man
 
 def placeEnemies(BombermanBoard):
@@ -68,7 +70,7 @@ def moveHandler(keyPress, Player, BombermanBoard):
 		exit(0)
 	elif keyPress == PAUSE:
 		input('Press <ENTER> to continue...')
-	elif keyPress == EDROP:
+	elif keyPress == EDROP and len(BombList) < MAX_BOMB_ALLOWED:
 		BombList.append(Bomb(Player.x_pos, Player.y_pos))
 	elif keyPress in MV:
 		if not Player.move(keyPress, BombermanBoard, BM):
@@ -79,33 +81,46 @@ def moveHandler(keyPress, Player, BombermanBoard):
 
 def loadBoard():
 	BombermanBoard = Board()
+
 	placeWalls(BombermanBoard)
 	placeBricks(BombermanBoard)
 	placeEnemies(BombermanBoard)
+
 	Player = placeBomberMan(BombermanBoard)
+	STYM = getTimeMillis()
+	SCORE = 0
+	WATCH = 180
+
 	while True:
 		os.system('clear')
+
 		if not Player.alive(BombermanBoard):
 			print(color.HRED + 'GAME OVER...!!!' + color.END)
 			os.system('sleep 2')
 			exit(0)
+
 		if Inp.kbhit():
 			moveHandler(Inp.getch(), Player, BombermanBoard)
-			# Player.move(Inp.getch(), BombermanBoard, BM)
+
 		tym = getTimeMillis()
 		for e in EnemyList:
 			if e.endTime + level < tym:
 				e.move(RMV[randint(0, 3)], BombermanBoard, EM, tym)
+
 		for b in BombList:
-			# if b.remainingTime() <= 0:
-			if b.explode(BombermanBoard):
+			check, sc = b.explode(BombermanBoard)
+			if check == 'True':
+				SCORE += sc
 				ExplosionList.append(b)
 				BombList.remove(b)
 
 		for e in ExplosionList:
 			if e.removeExplosion(BombermanBoard):
 				ExplosionList.remove(e)
-
-		print(BombermanBoard.scaledBoard())
+		if getTimeMillis() > STYM + 1000:
+			STYM = getTimeMillis()
+			WATCH -= 1
+		print(BombermanBoard.scaledBoard(SCORE, WATCH))
 		os.system('sleep 0.08')
+
 loadBoard()
