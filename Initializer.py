@@ -13,9 +13,10 @@ from Bomb import Bomb
 Inp = NonBlockInput()
 EnemyList = []
 BombList = []
+ExplosionList = []
 # Player = ''
 # BombermanBoard = ''
-level = LEVELZ
+level = LEVEL1
 
 if level < LEVEL4:
 	MAX_ENEMY = MAX_ENEMYX
@@ -68,9 +69,12 @@ def moveHandler(keyPress, Player, BombermanBoard):
 	elif keyPress == PAUSE:
 		input('Press <ENTER> to continue...')
 	elif keyPress == EDROP:
-		BombList.append(Bomb())
+		BombList.append(Bomb(Player.x_pos, Player.y_pos))
 	elif keyPress in MV:
-		Player.move(keyPress, BombermanBoard, BM)
+		if not Player.move(keyPress, BombermanBoard, BM):
+			print(color.HRED + 'GAME OVER...!!!' + color.END)
+			os.system('sleep 2')
+			exit(0)
 	return
 
 def loadBoard():
@@ -81,6 +85,10 @@ def loadBoard():
 	Player = placeBomberMan(BombermanBoard)
 	while True:
 		os.system('clear')
+		if not Player.alive(BombermanBoard):
+			print(color.HRED + 'GAME OVER...!!!' + color.END)
+			os.system('sleep 2')
+			exit(0)
 		if Inp.kbhit():
 			moveHandler(Inp.getch(), Player, BombermanBoard)
 			# Player.move(Inp.getch(), BombermanBoard, BM)
@@ -89,8 +97,15 @@ def loadBoard():
 			if e.endTime + level < tym:
 				e.move(RMV[randint(0, 3)], BombermanBoard, EM, tym)
 		for b in BombList:
-			if b.remainingTime() <= 0:
-				b.explode(BombermanBoard)
+			# if b.remainingTime() <= 0:
+			if b.explode(BombermanBoard):
+				ExplosionList.append(b)
+				BombList.remove(b)
+
+		for e in ExplosionList:
+			if e.removeExplosion(BombermanBoard):
+				ExplosionList.remove(e)
+
 		print(BombermanBoard.scaledBoard())
 		os.system('sleep 0.08')
 loadBoard()

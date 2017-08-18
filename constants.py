@@ -11,6 +11,7 @@ ENEM = [['(', '@', '@', ')'], [' ', ')', '(', ' ']]
 MV = {'d': 0, 's': 1, 'a': 2, 'w': 3}
 RMV = {0: 'd', 1: 's', 2: 'a', 3: 'w'}
 ETIME = 2010
+PTIME = ETIME + 500
 LEVEL1 = 850
 LEVEL2 = 700
 LEVEL3 = 500
@@ -43,6 +44,7 @@ class CLR:
 	LRED = '\x1b[38;5;9m'
 	LGREEN = '\x1b[38;5;34m'
 	LMAGENTA = '\x1b[38;5;13m'
+	LYELLOW = '\x1b[38;5;11m'
 	END = '\033[1;m'
 
 color = CLR()
@@ -50,8 +52,9 @@ BM = '@'
 EM = '!'
 BR = color.SBROWN + '%' + color.END
 WL = color.LRED + '#' + color.END
-EXPSIGN = color.CRIMSON + '^' + color.END
+EXPSIGN = color.LYELLOW + '^' + color.END
 EDROP = 'b'
+BSIGN = color.YELLOW + '*' + color.END
 for i in range(0, len(BMAN)):
 	for j in range(0, len(BMAN[i])):
 		BMAN[i][j] = color.LGREEN + BMAN[i][j] + color.END

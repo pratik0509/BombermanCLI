@@ -10,10 +10,6 @@ class Person:
 		self.x_pos = randint(1, board_width - 1)
 		self.y_pos = randint(1, board_height - 1)
 
-	'''
-	TODO: Return in which direction move is valid
-	'''
-
 	def moveValidity(self, Arena):
 		validMove = [True, True, True, True]
 		mvpos = 0
@@ -32,7 +28,7 @@ class Person:
 			return False
 		availMoves = self.moveValidity(BombermanBoard.arena)
 		if not availMoves[MV[keyPress]]:
-			return False
+			return True
 		BombermanBoard.arena[x][y] = ' '
 		if MV[keyPress] == 0:
 			y += 1
@@ -42,6 +38,9 @@ class Person:
 			y -= 1
 		elif MV[keyPress] == 3:
 			x -= 1
+		if code == BM:
+			if BombermanBoard.arena[x][y] == EM or BombermanBoard.arena[x][y] == EXPSIGN:
+				return False
 		BombermanBoard.arena[x][y] = code
 		self.x_pos = x
 		self.y_pos = y
