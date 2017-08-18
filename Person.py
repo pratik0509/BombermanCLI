@@ -26,11 +26,13 @@ class Person:
 		return validMove
 
 	def move(self, keyPress, BombermanBoard, code):
-		availMoves = self.moveValidity(BombermanBoard.arena)
-		if not availMoves[MV[keyPress]]:
-			return
 		x = self.x_pos
 		y = self.y_pos
+		if BombermanBoard.arena[x][y] != code:
+			return False
+		availMoves = self.moveValidity(BombermanBoard.arena)
+		if not availMoves[MV[keyPress]]:
+			return False
 		BombermanBoard.arena[x][y] = ' '
 		if MV[keyPress] == 0:
 			y += 1
@@ -43,3 +45,4 @@ class Person:
 		BombermanBoard.arena[x][y] = code
 		self.x_pos = x
 		self.y_pos = y
+		return True
