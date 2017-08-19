@@ -20,6 +20,11 @@ class Gate:
 		self.x_pos = x
 		self.y_pos = y
 
+def gameEnded(SCORE):
+	print(color.HRED + 'GAME OVER...!!!' + '\t' + color.HGREEN + ' SCORE:' + str(SCORE) + color.END)
+	os.system('sleep 2')
+	exit(0)
+
 def getTimeMillis():
 	return int(round(time.time() * 1000))
 
@@ -72,14 +77,13 @@ def moveHandler(keyPress, Player, BombermanBoard, SCORE):
 		BombList.append(Bomb(Player.x_pos, Player.y_pos))
 	elif keyPress in MV:
 		if not Player.move(keyPress, BombermanBoard, BM):
-			print(color.HRED + 'GAME OVER...!!!' + '\t' + color.HGREEN + ' SCORE:' + str(SCORE) + color.END)
-			os.system('sleep 2')
-			exit(0)
+			gameEnded(SCORE)
 	return
 
 def loadBoard():
 	SCORE = 0
-	for i in  range(1, 11):
+	lifes = 3
+	for i in  range(1, 8):
 		os.system('sleep 0.5')
 		level = LEVEL[i]
 		if level < LEVEL[5]:
@@ -99,9 +103,7 @@ def loadBoard():
 			 BombermanBoard.arena[NewGate.x_pos][NewGate.y_pos] != BM:
 				BombermanBoard.arena[NewGate.x_pos][NewGate.y_pos] = GT
 			if not Player.alive(BombermanBoard):
-				print(color.HRED + 'GAME OVER...!!!' + '\t' + color.HGREEN + ' SCORE:' + str(SCORE) + color.END)
-				os.system('sleep 2')
-				exit(0)
+				gameEnded(SCORE)
 
 			if Inp.kbhit():
 				moveHandler(Inp.getch(), Player, BombermanBoard, SCORE)
@@ -109,7 +111,7 @@ def loadBoard():
 
 			tym = getTimeMillis()
 			for e in EnemyList:
-				if e.endTime + level < tym:
+				if e.endTime + e.pauseTime + level < tym:
 					e.move(RMV[randint(0, 3)], BombermanBoard, EM, tym)
 
 			for b in BombList:
@@ -122,13 +124,14 @@ def loadBoard():
 			for e in ExplosionList:
 				if e.removeExplosion(BombermanBoard, EnemyList):
 					ExplosionList.remove(e)
+
 			if getTimeMillis() > STYM + 1000:
 				STYM = getTimeMillis()
 				WATCH -= 1
+
 			if WATCH < 1:
-				print(color.HRED + 'GAME OVER...!!!' + '\t' + color.HGREEN + ' SCORE:' + str(SCORE) + color.END)
-				os.system('sleep 2')
-				exit(0)
+				gameEnded(SCORE)
+
 			if len(EnemyList) == 0 and [Player.x_pos, Player.y_pos] == [NewGate.x_pos, NewGate.y_pos]:
 				SCORE += int(TIME_BONUS * WATCH) + LEVEL_BONUS // level
 				flag = True

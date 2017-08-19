@@ -13,16 +13,13 @@ RMV = {0: 'd', 1: 's', 2: 'a', 3: 'w'}
 ETIME = 2010
 PTIME = ETIME + 500
 LEVEL = {
-	1: 750,
-	2: 600,
-	3: 500,
-	4: 400,
-	5: 300,
-	6: 200,
-	7: 150,
-	8: 100,
-	9: 85,
-	10: 70
+	1: 650,
+	2: 500,
+	3: 400,
+	4: 300,
+	5: 200,
+	6: 100,
+	7: 80,
 	}
 class CLR:
 	GRAY = '\033[1;30m'
@@ -69,8 +66,8 @@ for i in range(0, len(BMAN)):
 
 QUIT = 'q'
 PAUSE = 'p'
-BREAK_BRICK = 50
-BREAK_ENEMY = 150
+BREAK_BRICK = 20
+BREAK_ENEMY = 100
 LEVEL_BONUS = 3000
 TIME_BONUS = 0.4
 MAX_BOMB_ALLOWED = 2
