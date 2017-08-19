@@ -1,6 +1,5 @@
 import sys
 from select import select
-import atexit
 import termios
 
 class NonBlockInput:

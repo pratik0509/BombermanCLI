@@ -1,8 +1,8 @@
-from constants import *
-from random import randint
+from constants import *				# Game Play/State constants
+from random import randint			# For generating random numbers
 from Board import Board
 from Brick import Brick
-import os
+from os import system
 import time
 from Bomberman import Bomberman
 from Enemy import Enemy
@@ -20,15 +20,15 @@ class Gate:
 		self.x_pos = x
 		self.y_pos = y
 
-def gameEnded(SCORE):
+def gameEnded(SCORE): 					# Called when Game ends to print the final score
 	print(color.HRED + 'GAME OVER...!!!' + '\t' + color.HGREEN + ' SCORE:' + str(SCORE) + color.END)
-	os.system('sleep 2')
+	system('sleep 2')
 	exit(0)
 
-def getTimeMillis():
+def getTimeMillis():					# Get time in milliseconds
 	return int(round(time.time() * 1000))
 
-def placeWalls(BombermanBoard):
+def placeWalls(BombermanBoard):			# Place the walls on the board
 	for i in range(0, BombermanBoard.height):
 		BombermanBoard.arena.append([])
 
@@ -49,26 +49,26 @@ def placeWalls(BombermanBoard):
 			if i % 2 == 0 and j % 2 == 0:
 				BombermanBoard.arena[i][j] = WL
 
-def placeBricks(BombermanBoard):
+def placeBricks(BombermanBoard):					# Place the bricks on the board
 	for i in range(0, MAX_BRICKS):
 		block = Brick(BombermanBoard.height ,BombermanBoard.width)
 		while not BombermanBoard.placeObject(block.x_pos, block.y_pos, BR) :
 			block = Brick(BombermanBoard.height ,BombermanBoard.width)
-	return Gate(block.x_pos, block.y_pos)
+	return Gate(block.x_pos, block.y_pos)			# Return the brick inside which gate is located
 
-def placeBomberMan(BombermanBoard):
+def placeBomberMan(BombermanBoard):					# Place Bomberman on the board
 	man = Bomberman()
 	BombermanBoard.placeObject(man.x_pos, man.y_pos, BM)
 	return man
 
-def placeEnemies(BombermanBoard):
+def placeEnemies(BombermanBoard):					# Place enemies on the board
 	for i in range(0, MAX_ENEMY):
 		block = Enemy(BombermanBoard.height ,BombermanBoard.width)
 		while not BombermanBoard.placeObject(block.x_pos, block.y_pos, EM) :
 			block = Enemy(BombermanBoard.height ,BombermanBoard.width)
-		EnemyList.append(block)
+		EnemyList.append(block)			# Append the enemies to the alive enemy list
 
-def moveHandler(keyPress, Player, BombermanBoard, SCORE):
+def moveHandler(keyPress, Player, BombermanBoard, SCORE):	# Move the pieces on the board
 	if keyPress == QUIT:
 		exit(0)
 	elif keyPress == PAUSE:
@@ -77,65 +77,82 @@ def moveHandler(keyPress, Player, BombermanBoard, SCORE):
 		BombList.append(Bomb(Player.x_pos, Player.y_pos))
 	elif keyPress in MV:
 		if not Player.move(keyPress, BombermanBoard, BM):
-			gameEnded(SCORE)
-	return
+			return True
+	return False
 
-def loadBoard():
+def loadBoard():			# The main function where all starts ;)
 	SCORE = 0
-	lifes = 3
+	lifes = 3				# Life awarded to the user
 	for i in  range(1, 8):
-		os.system('sleep 0.5')
-		level = LEVEL[i]
-		if level < LEVEL[5]:
-			MAX_ENEMY = MAX_ENEMYX
-			MAX_BRICKS = MAX_BRICKSX
-		BombermanBoard = Board()
-		placeWalls(BombermanBoard)
-		Player = placeBomberMan(BombermanBoard)
-		NewGate = placeBricks(BombermanBoard)
-		placeEnemies(BombermanBoard)
-		STYM = getTimeMillis()
-		WATCH = 200
 		flag = False
-		while True and not flag:
-			os.system('clear')
-			if BombermanBoard.arena[NewGate.x_pos][NewGate.y_pos] != BR and\
-			 BombermanBoard.arena[NewGate.x_pos][NewGate.y_pos] != BM:
-				BombermanBoard.arena[NewGate.x_pos][NewGate.y_pos] = GT
-			if not Player.alive(BombermanBoard):
-				gameEnded(SCORE)
+		while lifes > 0 and not flag:
+			system('sleep 0.5')		# Pause before the game starts
+			level = LEVEL[i]
+			del EnemyList[:]		# Clear the Lists
+			del BombList[:]
+			del ExplosionList[:]
 
-			if Inp.kbhit():
-				moveHandler(Inp.getch(), Player, BombermanBoard, SCORE)
-				Inp.flush()
+			if level < LEVEL[5]:		# Check for xtreme levels
+				MAX_ENEMY = MAX_ENEMYX
+				MAX_BRICKS = MAX_BRICKSX
+			BombermanBoard = Board()		# Initialize the board
+			placeWalls(BombermanBoard)
+			Player = placeBomberMan(BombermanBoard)
+			NewGate = placeBricks(BombermanBoard)
+			placeEnemies(BombermanBoard)
+			WATCH = 200					# Timeout for the game
+			STYM = getTimeMillis()
+			flag = False				# Level not finished yet
+			loop = 1
+			while True and not flag:
+				system('clear')			# Clear the screen for displaying the board properly
+				if BombermanBoard.arena[NewGate.x_pos][NewGate.y_pos] != BR and\
+				 BombermanBoard.arena[NewGate.x_pos][NewGate.y_pos] != BM:
+					BombermanBoard.arena[NewGate.x_pos][NewGate.y_pos] = GT
 
-			tym = getTimeMillis()
-			for e in EnemyList:
-				if e.endTime + e.pauseTime + level < tym:
-					e.move(RMV[randint(0, 3)], BombermanBoard, EM, tym)
+				if not Player.alive(BombermanBoard):	# Check if the player is still alive
+					lifes -= 1
+					break
 
-			for b in BombList:
-				check, sc = b.explode(BombermanBoard, EnemyList)
-				if check == 'True':
-					SCORE += sc
-					ExplosionList.append(b)
-					BombList.remove(b)
+				if Inp.kbhit():		# Check for input
+					lifeCheck = True
+					if moveHandler(Inp.getch(), Player, BombermanBoard, SCORE):
+						lifeCheck = False
+					Inp.flush()		# Flush the input buffer so that remaining characters are discarded
+					if not lifeCheck:
+						lifes -= 1
+						break
 
-			for e in ExplosionList:
-				if e.removeExplosion(BombermanBoard, EnemyList):
-					ExplosionList.remove(e)
+				tym = getTimeMillis()
+				for e in EnemyList:		# Loop over the enemies to move them
+					if e.endTime + e.pauseTime + level < tym:
+						e.move(RMV[randint(0, 3)], BombermanBoard, EM, tym)
 
-			if getTimeMillis() > STYM + 1000:
-				STYM = getTimeMillis()
-				WATCH -= 1
+				for b in BombList:		# loop over the dormant bombs to find out the exploding ones
+					check, sc = b.explode(BombermanBoard, EnemyList)
+					if check == 'True':
+						SCORE += sc
+						ExplosionList.append(b)
+						BombList.remove(b)
 
-			if WATCH < 1:
-				gameEnded(SCORE)
+				for e in ExplosionList:				# Loop over the exploding bombs
+					if e.removeExplosion(BombermanBoard, EnemyList):
+						ExplosionList.remove(e)
 
-			if len(EnemyList) == 0 and [Player.x_pos, Player.y_pos] == [NewGate.x_pos, NewGate.y_pos]:
-				SCORE += int(TIME_BONUS * WATCH) + LEVEL_BONUS // level
-				flag = True
-			print(BombermanBoard.scaledBoard(SCORE, WATCH) + 'LEVEL: ' + str(i))
-			os.system('sleep 0.08')
+				if getTimeMillis() > STYM + 1000:
+					STYM = getTimeMillis()
+					WATCH -= 1
 
+				if WATCH < 1:
+					lifes -= 1
+					break
+
+				if len(EnemyList) == 0 and [Player.x_pos, Player.y_pos] == [NewGate.x_pos, NewGate.y_pos]:
+					SCORE += int(TIME_BONUS * WATCH) + LEVEL_BONUS // level
+					flag = True
+				loop += 1
+				# Print the score and lifes with board
+				print(BombermanBoard.scaledBoard(SCORE, WATCH) + 'LEVEL: ' + str(i) + '\tLIFE: ' + str(lifes))
+				system('sleep 0.08')		# For proper display of frames
+	gameEnded(SCORE)  # When game ends display the scores
 loadBoard()

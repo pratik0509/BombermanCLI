@@ -7,7 +7,6 @@ class Bomberman(Person):
 	'''
 
 	def __init__(self):
-		# super().__init__(board_height, board_width)
 		self.x_pos = 1
 		self.y_pos = 1
 

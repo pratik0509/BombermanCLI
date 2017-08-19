@@ -39,6 +39,12 @@ class Board:
 		return objString
 
 	def placeObject(self, x_pos, y_pos, piece):
+		if x_pos == 2 and y_pos == 1:
+			return False
+
+		if y_pos == 2 and x_pos == 1:
+			return False
+
 		if self.arena[x_pos][y_pos] != ' ':
 			return False
 		else:

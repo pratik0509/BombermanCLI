@@ -28,9 +28,6 @@ class Person:
 		x = self.x_pos
 		y = self.y_pos
 
-		# if BombermanBoard.arena[x][y] != code:
-			# return False
-
 		availMoves = self.moveValidity(BombermanBoard.arena)
 
 		if not availMoves[MV[keyPress]]:
