@@ -2,26 +2,28 @@ MIN_WIDTH = 17
 MIN_HEIGHT = 17
 X_SCALE = 4
 Y_SCALE = 2
-MAX_BRICKS = 10
+MAX_BRICKS = 15
 MAX_BRICKSX = 20
 BMAN = [['[', '^', '^', ']'], [' ', ']', '[', ' ']]
-MAX_ENEMY = 4
+MAX_ENEMY = 5
 MAX_ENEMYX = 10
 ENEM = [['(', '@', '@', ')'], [' ', ')', '(', ' ']]
 MV = {'d': 0, 's': 1, 'a': 2, 'w': 3}
 RMV = {0: 'd', 1: 's', 2: 'a', 3: 'w'}
 ETIME = 2010
 PTIME = ETIME + 500
-LEVEL1 = 850
-LEVEL2 = 700
-LEVEL3 = 500
-LEVEL4 = 400
-LEVEL5 = 300
-LEVEL6 = 200
-LEVEL7 = 150
-LEVELX = 90
-LEVELY = 85
-LEVELZ = 70
+LEVEL = {
+	1: 750,
+	2: 600,
+	3: 500,
+	4: 400,
+	5: 300,
+	6: 200,
+	7: 150,
+	8: 100,
+	9: 85,
+	10: 70
+	}
 class CLR:
 	GRAY = '\033[1;30m'
 	RED = '\033[1;31m'
@@ -50,6 +52,7 @@ class CLR:
 color = CLR()
 BM = '@'
 EM = '!'
+GT = color.HCYAN + '$' + color.END
 BR = color.SBROWN + '%' + color.END
 WL = color.LRED + '#' + color.END
 EXPSIGN = color.LYELLOW + '^' + color.END

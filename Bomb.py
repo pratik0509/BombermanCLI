@@ -38,53 +38,13 @@ class Bomb:
 			return str(False), 0
 		x = self.x_pos
 		y = self.y_pos
-		SCORE = 0
-		if not BombermanBoard.arena[x][y] == WL:
-			SCORE += self.__check(BombermanBoard.arena[x][y])
-			rmEnemy(EnemyList, x, y, BombermanBoard)
-			BombermanBoard.arena[x][y] = EXPSIGN
-		if not BombermanBoard.arena[x][y + 1] == WL:
-			SCORE += self.__check(BombermanBoard.arena[x][y + 1])
-			rmEnemy(EnemyList, x, y + 1, BombermanBoard)
-			BombermanBoard.arena[x][y + 1] = EXPSIGN
-		if not BombermanBoard.arena[x][y - 1] == WL:
-			SCORE += self.__check(BombermanBoard.arena[x][y - 1])
-			rmEnemy(EnemyList, x, y - 1, BombermanBoard)
-			BombermanBoard.arena[x][y - 1] = EXPSIGN
-		if not BombermanBoard.arena[x + 1][y] == WL:
-			SCORE += self.__check(BombermanBoard.arena[x + 1][y])
-			rmEnemy(EnemyList, x + 1, y, BombermanBoard)
-			BombermanBoard.arena[x + 1][y] = EXPSIGN
-		if not BombermanBoard.arena[x - 1][y] == WL:
-			SCORE += self.__check(BombermanBoard.arena[x - 1][y])
-			rmEnemy(EnemyList, x - 1, y, BombermanBoard)
-			BombermanBoard.arena[x - 1][y] = EXPSIGN
+		SCORE = self.utility(x, y, BombermanBoard, EnemyList)
 		return str(True), SCORE
 
 	def removeExplosion(self, BombermanBoard, EnemyList):
 		x = self.x_pos
 		y = self.y_pos
-		SCORE = 0
-		if not BombermanBoard.arena[x][y] == WL:
-			SCORE += self.__check(BombermanBoard.arena[x][y])
-			rmEnemy(EnemyList, x, y, BombermanBoard)
-			BombermanBoard.arena[x][y] = EXPSIGN
-		if not BombermanBoard.arena[x][y + 1] == WL:
-			SCORE += self.__check(BombermanBoard.arena[x][y + 1])
-			rmEnemy(EnemyList, x, y + 1, BombermanBoard)
-			BombermanBoard.arena[x][y + 1] = EXPSIGN
-		if not BombermanBoard.arena[x][y - 1] == WL:
-			SCORE += self.__check(BombermanBoard.arena[x][y - 1])
-			rmEnemy(EnemyList, x, y - 1, BombermanBoard)
-			BombermanBoard.arena[x][y - 1] = EXPSIGN
-		if not BombermanBoard.arena[x + 1][y] == WL:
-			SCORE += self.__check(BombermanBoard.arena[x + 1][y])
-			rmEnemy(EnemyList, x + 1, y, BombermanBoard)
-			BombermanBoard.arena[x + 1][y] = EXPSIGN
-		if not BombermanBoard.arena[x - 1][y] == WL:
-			SCORE += self.__check(BombermanBoard.arena[x - 1][y])
-			rmEnemy(EnemyList, x - 1, y, BombermanBoard)
-			BombermanBoard.arena[x - 1][y] = EXPSIGN
+		SCORE = self.utility(x, y, BombermanBoard, EnemyList)
 
 		if self.endTime > getTimeMillis():
 			return
@@ -104,6 +64,31 @@ class Bomb:
 			BombermanBoard.arena[x - 1][y] = ' '
 			rmEnemy(EnemyList, x - 1, y, BombermanBoard)
 		return True
+
+
+	def utility(self, x, y, BombermanBoard, EnemyList):
+		SCORE = 0
+		if not BombermanBoard.arena[x][y] == WL:
+			SCORE += self.__check(BombermanBoard.arena[x][y])
+			rmEnemy(EnemyList, x, y, BombermanBoard)
+			BombermanBoard.arena[x][y] = EXPSIGN
+		if not BombermanBoard.arena[x][y + 1] == WL:
+			SCORE += self.__check(BombermanBoard.arena[x][y + 1])
+			rmEnemy(EnemyList, x, y + 1, BombermanBoard)
+			BombermanBoard.arena[x][y + 1] = EXPSIGN
+		if not BombermanBoard.arena[x][y - 1] == WL:
+			SCORE += self.__check(BombermanBoard.arena[x][y - 1])
+			rmEnemy(EnemyList, x, y - 1, BombermanBoard)
+			BombermanBoard.arena[x][y - 1] = EXPSIGN
+		if not BombermanBoard.arena[x + 1][y] == WL:
+			SCORE += self.__check(BombermanBoard.arena[x + 1][y])
+			rmEnemy(EnemyList, x + 1, y, BombermanBoard)
+			BombermanBoard.arena[x + 1][y] = EXPSIGN
+		if not BombermanBoard.arena[x - 1][y] == WL:
+			SCORE += self.__check(BombermanBoard.arena[x - 1][y])
+			rmEnemy(EnemyList, x - 1, y, BombermanBoard)
+			BombermanBoard.arena[x - 1][y] = EXPSIGN
+		return SCORE
 
 def rmEnemy(EnemyList, x, y, BombermanBoard):
 	for e in EnemyList:
