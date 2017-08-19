@@ -15,6 +15,10 @@ EnemyList = []
 BombList = []
 ExplosionList = []
 level = LEVEL1
+class Gate:
+	def __init__(self, x, y):
+		self.x_pos = x
+		self.y_pos = y
 
 if level < LEVEL4:
 	MAX_ENEMY = MAX_ENEMYX
@@ -49,6 +53,7 @@ def placeBricks(BombermanBoard):
 		block = Brick(BombermanBoard.height ,BombermanBoard.width)
 		while not BombermanBoard.placeObject(block.x_pos, block.y_pos, BR) :
 			block = Brick(BombermanBoard.height ,BombermanBoard.width)
+	return Gate(block.x_pos, block.y_pos)
 
 def placeBomberMan(BombermanBoard):
 	man = Bomberman(BombermanBoard.height, BombermanBoard.width)
@@ -83,13 +88,14 @@ def loadBoard():
 	BombermanBoard = Board()
 
 	placeWalls(BombermanBoard)
-	placeBricks(BombermanBoard)
+	NewGate = placeBricks(BombermanBoard)
 	placeEnemies(BombermanBoard)
 
 	Player = placeBomberMan(BombermanBoard)
 	STYM = getTimeMillis()
 	SCORE = 0
 	WATCH = 180
+	flag = False
 
 	while True:
 		os.system('clear')
@@ -101,6 +107,7 @@ def loadBoard():
 
 		if Inp.kbhit():
 			moveHandler(Inp.getch(), Player, BombermanBoard)
+			Inp.flush()
 
 		tym = getTimeMillis()
 		for e in EnemyList:
@@ -108,19 +115,26 @@ def loadBoard():
 				e.move(RMV[randint(0, 3)], BombermanBoard, EM, tym)
 
 		for b in BombList:
-			check, sc = b.explode(BombermanBoard)
+			check, sc = b.explode(BombermanBoard, EnemyList)
 			if check == 'True':
 				SCORE += sc
 				ExplosionList.append(b)
 				BombList.remove(b)
 
 		for e in ExplosionList:
-			if e.removeExplosion(BombermanBoard):
+			if e.removeExplosion(BombermanBoard, EnemyList):
 				ExplosionList.remove(e)
 		if getTimeMillis() > STYM + 1000:
 			STYM = getTimeMillis()
 			WATCH -= 1
+		if WATCH < 1:
+			return
+		if len(EnemyList) == 0 and [Player.x_pos, Player.y_pos] == [NewGate.x_pos, NewGate.y_pos]:
+			SCORE += int(TIME_BONUS * WATCH) + LEVEL_BONUS // level
+			flag = True
 		print(BombermanBoard.scaledBoard(SCORE, WATCH))
+		if flag:
+			return
 		os.system('sleep 0.08')
 
 loadBoard()
