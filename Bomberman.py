@@ -6,8 +6,10 @@ class Bomberman(Person):
 	Class for Bomberman
 	'''
 
-	def __init__(self, board_height, board_width):
-		super().__init__(board_height, board_width)
+	def __init__(self):
+		# super().__init__(board_height, board_width)
+		self.x_pos = 1
+		self.y_pos = 1
 
 	def alive(self, BombermanBoard):
 		return BombermanBoard.arena[self.x_pos][self.y_pos] == BM

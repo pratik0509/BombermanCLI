@@ -52,11 +52,8 @@ def placeBricks(BombermanBoard):
 	return Gate(block.x_pos, block.y_pos)
 
 def placeBomberMan(BombermanBoard):
-	man = Bomberman(BombermanBoard.height, BombermanBoard.width)
-
-	while not BombermanBoard.placeObject(man.x_pos, man.y_pos, BM):
-		man = Bomberman(BombermanBoard.height, BombermanBoard.width)
-
+	man = Bomberman()
+	BombermanBoard.placeObject(man.x_pos, man.y_pos, BM)
 	return man
 
 def placeEnemies(BombermanBoard):
@@ -90,9 +87,9 @@ def loadBoard():
 			MAX_BRICKS = MAX_BRICKSX
 		BombermanBoard = Board()
 		placeWalls(BombermanBoard)
+		Player = placeBomberMan(BombermanBoard)
 		NewGate = placeBricks(BombermanBoard)
 		placeEnemies(BombermanBoard)
-		Player = placeBomberMan(BombermanBoard)
 		STYM = getTimeMillis()
 		WATCH = 200
 		flag = False
