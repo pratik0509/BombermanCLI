@@ -29,6 +29,7 @@ Very lightweight and does not require bloated libraries like _PyGame_ or _ncurse
 * 3 lives for each play.
 * Gate to enter new levels and active only after destroying all enemies.
 * Max Level upto 7.
+* Explosion persists for some time interval.
 * To make things worse for player the enemies move randomly.
 * BomberMan can drop have most two bombs at a time.
 * In each level Enemies move with some base speed with some randomness added to their base speeds.
