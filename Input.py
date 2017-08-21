@@ -22,3 +22,6 @@ class NonBlockInput:
 
 	def flush(self):
 		termios.tcflush(self.fileDescriptor, termios.TCIFLUSH)
+
+	def __del__(self):
+		termios.tcsetattr(self.fileDescriptor, termios.TCSANOW, self.oldTerm)

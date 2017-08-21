@@ -155,4 +155,6 @@ def loadBoard():			# The main function where all starts ;)
 				print(BombermanBoard.scaledBoard(SCORE, WATCH) + 'LEVEL: ' + str(i) + '\tLIFE: ' + str(lifes))
 				system('sleep 0.08')		# For proper display of frames
 	gameEnded(SCORE)  # When game ends display the scores
-loadBoard()
+
+if __name__ == '__main__':
+	loadBoard()
