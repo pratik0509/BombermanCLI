@@ -10,7 +10,7 @@ class NonBlockInput:
         self.newTerm = termios.tcgetattr(self.fileDescriptor)
         self.oldTerm = termios.tcgetattr(self.fileDescriptor)
 
-        self.newTerm[3] = (self.newTerm[3] & ~termios.ICANON & ~termios.ECHO)
+        self.newTerm[3] &= (~termios.ICANON & ~termios.ECHO)
         termios.tcsetattr(self.fileDescriptor, termios.TCSAFLUSH, self.newTerm)
 
     # Check the availability of character in STDIN

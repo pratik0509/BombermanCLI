@@ -163,8 +163,9 @@ def loadBoard():			# The main function where all starts ;)
                     lifes -= 1
                     break
 
-                if len(EnemyList) == 0 and \
-                 [Player.x_pos, Player.y_pos] == [NewGate.x_pos, NewGate.y_pos]:
+                if len(EnemyList) == 0 and\
+                   Player.x_pos == NewGate.x_pos and\
+                   Player.y_pos == NewGate.y_pos:
                     SCORE += int(TIME_BONUS * WATCH) + LEVEL_BONUS // level
                     flag = True
                 # Print the score and lifes with board
