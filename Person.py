@@ -1,5 +1,5 @@
 from random import randint
-from constants import *
+from constants import MV, BM, EM, EXPSIGN, BR, WL
 
 
 class Person:
